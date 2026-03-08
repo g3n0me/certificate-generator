@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AyurSanjeevani Certificate Generator</title>
+  
+  <!-- Allura font -->
+  <link href="https://fonts.googleapis.com/css2?family=Allura&display=swap" rel="stylesheet">
+  
+  <!-- jsPDF for PDF download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 30px 15px;
+      text-align: center;
+      color: #333;
+    }
+    h1 {
+      color: #2c3e50;
+      margin-bottom: 0.4em;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    input[type="text"] {
+      padding: 14px 18px;
+      font-size: 1.2rem;
+      width: 100%;
+      max-width: 420px;
+      border: 2px solid #ced4da;
+      border-radius: 8px;
+      margin: 20px 0 12px;
+      box-sizing: border-box;
+    }
+    input::placeholder {
+      color: #aaa;
+    }
+    .buttons {
+      margin: 20px 0 30px;
+    }
+    button {
+      padding: 14px 32px;
+      font-size: 1.15rem;
+      margin: 8px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    #generateBtn {
+      background: #4a6bff;
+      color: white;
+    }
+    #generateBtn:hover {
+      background: #3a5ae0;
+    }
+    #downloadPdf {
+      background: #28a745;
+      color: white;
+      font-weight: bold;
+    }
+    #downloadPdf:hover {
+      background: #218838;
+    }
+    #downloadJpg {
+      background: #6c757d;
+      color: white;
+    }
+    #downloadJpg:hover {
+      background: #5a6268;
+    }
+    button:disabled {
+      background: #ccc !important;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+    canvas {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      max-width: 100%;
+      height: auto;
+      background: white;
+      margin: 20px auto;
+      display: block;
+    }
+    .hint {
+      color: #666;
+      font-size: 0.95rem;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>AyurSanjeevani Certificate Generator</h1>
+    <p style="color:#555; margin-bottom:30px;">
+      Enter your full name to generate your Certificate of Appreciation
+    </p>
+
+    <input type="text" id="name" placeholder="Enter your full name here" />
+
+    <div class="buttons">
+      <button id="generateBtn" onclick="generateCertificate()">Generate Certificate</button>
+      <br>
+      <button id="downloadPdf" onclick="downloadPdf()" disabled>
+        Download PDF (Recommended – Best for Print)
+      </button>
+      <button id="downloadJpg" onclick="downloadImage('jpg')" disabled>
+        Download JPG (Quick Share)
+      </button>
+    </div>
+
+    <canvas id="canvas" width="1400" height="1050"></canvas>
+
+    <p class="hint" id="status" style="min-height:1.4em;"></p>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    const generateBtn = document.getElementById('generateBtn');
+    const pdfBtn = document.getElementById('downloadPdf');
+    const jpgBtn = document.getElementById('downloadJpg');
+    const status = document.getElementById('status');
+
+    // Load background template
+    const bgImage = new Image();
+    bgImage.src = "template.png";  // ← your local file (must run via http://localhost)
+
+    bgImage.onload = () => {
+      ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+      status.textContent = "Template loaded. Ready to generate.";
+    };
+
+    bgImage.onerror = () => {
+      status.textContent = "Error loading template.png – make sure you're using a local server (not file://)";
+      status.style.color = "red";
+    };
+
+    function generateCertificate() {
+      const name = document.getElementById('name').value.trim();
+      if (!name) {
+        status.textContent = "Please enter your name";
+        status.style.color = "#d9534f";
+        return;
+      }
+
+      // Redraw background
+      ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+
+      // Draw name
+      ctx.font = 'normal 92px "Allura"';
+      ctx.fillStyle = '#1a0d4a';           // ← change to match your template color
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      const x = canvas.width / 2;
+      const y = 480;                       // ← adjust this number to move name lower/higher
+
+      ctx.fillText(name, x, y);
+
+      // Enable download buttons
+      pdfBtn.disabled = false;
+      jpgBtn.disabled = false;
+
+      status.textContent = `Certificate ready for ${name}! Choose PDF for printing or JPG for sharing.`;
+      status.style.color = "#28a745";
+    }
+
+    function downloadImage(format = 'jpg') {
+      const name = document.getElementById('name').value.trim() || 'Participant';
+      const mime = format === 'jpg' ? 'image/jpeg' : 'image/png';
+      const quality = format === 'jpg' ? 0.92 : 1.0;
+
+      const link = document.createElement('a');
+      link.download = `Certificate_AyurSanjeevani_${name.replace(/\s+/g,'_')}.${format}`;
+      link.href = canvas.toDataURL(mime, quality);
+      link.click();
+    }
+
+    async function downloadPdf() {
+      if (!window.jspdf) {
+        alert("PDF library failed to load. Check your internet connection.");
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const name = document.getElementById('name').value.trim() || 'Participant';
+
+      const pdf = new jsPDF({
+        orientation: 'landscape',
+        unit: 'px',
+        format: [canvas.width, canvas.height]
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+
+      pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+      pdf.save(`Certificate_AyurSanjeevani_${name.replace(/\s+/g,'_')}.pdf`);
+    }
+  </script>
+</body>
+</html>
