@@ -3,209 +3,467 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AyurSanjeevani Certificate Generator</title>
+  <title>Excellence Ayurveda – Certificate Generator</title>
   
-  <!-- Allura font -->
-  <link href="https://fonts.googleapis.com/css2?family=Allura&display=swap" rel="stylesheet">
-  
-  <!-- jsPDF for PDF download -->
+  <link href="https://fonts.googleapis.com/css2?family=Allura&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   
   <style>
+    :root {
+      --ayur-green:    #2e5d3a;
+      --ayur-green-dark:#1a3c26;
+      --ayur-gold:     #c9a96e;
+      --ayur-cream:    #fdfaf3;
+      --text-dark:     #2d2d2d;
+      --border-light:  #e0e0d8;
+    }
+
+    * { box-sizing: border-box; margin:0; padding:0; }
+
     body {
-      font-family: system-ui, -apple-system, sans-serif;
-      background: #f8f9fa;
-      margin: 0;
-      padding: 30px 15px;
-      text-align: center;
-      color: #333;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: linear-gradient(-45deg, var(--ayur-cream), #f0ede5, #e8e2d3, var(--ayur-cream));
+      background-size: 400% 400%;
+      animation: gentleBreathe 15s ease-in-out infinite alternate;
+      color: var(--text-dark);
+      min-height: 100vh;
+      padding: 1.5rem 1rem;
+      line-height: 1.6;
     }
-    h1 {
-      color: #2c3e50;
-      margin-bottom: 0.4em;
+
+    @keyframes gentleBreathe {
+      0%   { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
     }
+
     .container {
-      max-width: 900px;
+      max-width: 1000px;
       margin: 0 auto;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+      overflow: hidden;
+      animation: fadeInUp 1s ease-out;
+      position: relative;
     }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--ayur-green), var(--ayur-green-dark));
+      color: white;
+      padding: 3.5rem 1.5rem 2.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+      border-radius: 50%;
+      flex-shrink: 0;
+      animation: gentleRotate 25s linear infinite;
+      border: 2px solid var(--ayur-gold);
+    }
+
+    @keyframes gentleRotate {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    h1 {
+      font-family: 'Allura', cursive;
+      font-size: clamp(2.8rem, 9vw, 4.5rem);
+      color: var(--ayur-gold);
+      text-shadow: 0 2px 10px rgba(0,0,0,0.35);
+      margin: 0;
+      animation: glow 3.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 2px 8px rgba(0,0,0,0.3), 0 0 20px rgba(201,169,110,0.4); }
+      to   { text-shadow: 0 2px 8px rgba(0,0,0,0.3), 0 0 40px rgba(201,169,110,0.7); }
+    }
+
+    .subtitle {
+      font-size: clamp(1.1rem, 4vw, 1.4rem);
+      opacity: 0.92;
+      margin: 0.6rem auto 0;
+      max-width: 700px;
+    }
+
+    .content {
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+    }
+
+    label {
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-bottom: 0.8rem;
+      color: var(--ayur-green-dark);
+      display: block;
+    }
+
     input[type="text"] {
-      padding: 14px 18px;
-      font-size: 1.2rem;
       width: 100%;
-      max-width: 420px;
-      border: 2px solid #ced4da;
-      border-radius: 8px;
-      margin: 20px 0 12px;
-      box-sizing: border-box;
+      max-width: 500px;
+      padding: 1rem 1.4rem;
+      font-size: 1.3rem;
+      border: 2px solid var(--border-light);
+      border-radius: 12px;
+      text-align: center;
+      transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
     }
-    input::placeholder {
-      color: #aaa;
+
+    input:focus {
+      outline: none;
+      border-color: var(--ayur-green);
+      box-shadow: 0 0 0 4px rgba(46,93,58,0.2);
+      transform: scale(1.015);
     }
+
     .buttons {
-      margin: 20px 0 30px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem 1.5rem;
+      margin: 2rem 0 2.5rem;
     }
+
     button {
-      padding: 14px 32px;
-      font-size: 1.15rem;
-      margin: 8px;
+      padding: 0.9rem 2.2rem;
+      font-size: 1.1rem;
+      font-weight: 600;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+      position: relative;
+      overflow: hidden;
+      min-width: 180px;
     }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255,255,255,0.25);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.6s ease, height 0.6s ease;
+      pointer-events: none;
+    }
+
+    button:active::before {
+      width: 400px;
+      height: 400px;
+    }
+
     #generateBtn {
-      background: #4a6bff;
+      background: var(--ayur-green);
       color: white;
     }
+
     #generateBtn:hover {
-      background: #3a5ae0;
+      background: var(--ayur-green-dark);
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 10px 30px rgba(46,93,58,0.35);
     }
+
     #downloadPdf {
-      background: #28a745;
-      color: white;
-      font-weight: bold;
+      background: var(--ayur-gold);
+      color: #1f1f1f;
     }
+
     #downloadPdf:hover {
-      background: #218838;
+      background: #b8975e;
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 10px 30px rgba(201,169,110,0.35);
     }
+
     #downloadJpg {
-      background: #6c757d;
+      background: #8a9a7d;
       color: white;
     }
+
     #downloadJpg:hover {
-      background: #5a6268;
+      background: #77886a;
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 10px 30px rgba(138,154,125,0.35);
     }
+
     button:disabled {
       background: #ccc !important;
       cursor: not-allowed;
-      opacity: 0.7;
+      opacity: 0.65;
+      transform: none !important;
     }
+
+    button.loading::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      top: 50%;
+      left: 50%;
+      margin: -9px 0 0 -9px;
+      border: 2px solid currentColor;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
     canvas {
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.08);
       max-width: 100%;
       height: auto;
       background: white;
-      margin: 20px auto;
+      margin: 1.5rem auto;
       display: block;
+      opacity: 0;
+      transform: scale(0.96);
+      transition: all 0.6s cubic-bezier(0.34,1.56,0.64,1);
     }
-    .hint {
-      color: #666;
-      font-size: 0.95rem;
-      margin-top: 10px;
+
+    canvas.generated {
+      opacity: 1;
+      transform: scale(1);
+      animation: bounceIn 0.8s ease-out;
+    }
+
+    @keyframes bounceIn {
+      0%   { transform: scale(0.4);  opacity: 0; }
+      60%  { transform: scale(1.08); }
+      80%  { transform: scale(0.92); }
+      100% { transform: scale(1);    opacity: 1; }
+    }
+
+    #status {
+      font-size: 1.05rem;
+      min-height: 1.5em;
+      margin-top: 1.2rem;
+      color: var(--ayur-green-dark);
+      opacity: 0;
+      transform: translateY(15px);
+      transition: all 0.5s ease-out;
+    }
+
+    #status.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .error   { color: #a94442; }
+    .success { color: var(--ayur-green); }
+
+    /* Floating leaves */
+    .leaf {
+      position: absolute;
+      width: 10px;
+      height: 14px;
+      background: var(--ayur-green);
+      clip-path: ellipse(50% 60% at 50% 50%);
+      opacity: 0.25;
+      pointer-events: none;
+      animation: floatLeaf linear infinite;
+      z-index: 1;
+    }
+
+    .leaf:nth-child(1)  { left: 8%;  animation-duration: 18s; animation-delay: -2s; }
+    .leaf:nth-child(2)  { left: 25%; animation-duration: 22s; animation-delay: 3s;  }
+    .leaf:nth-child(3)  { left: 55%; animation-duration: 16s; animation-delay: 7s;  }
+    .leaf:nth-child(4)  { left: 78%; animation-duration: 20s; animation-delay: 11s; }
+    .leaf:nth-child(5)  { left: 92%; animation-duration: 19s; animation-delay: 5s;  }
+
+    @keyframes floatLeaf {
+      0%   { transform: translateY(120vh) rotate(0deg) translateX(0); opacity: 0; }
+      5%   { opacity: 0.25; }
+      95%  { opacity: 0.25; }
+      100% { transform: translateY(-30vh) rotate(720deg) translateX(40px); opacity: 0; }
+    }
+
+    footer {
+      background: var(--ayur-green-dark);
+      color: rgba(255,255,255,0.88);
+      text-align: center;
+      padding: 1.4rem;
+      font-size: 0.92rem;
+      margin-top: 2.5rem;
+    }
+
+    footer a {
+      color: var(--ayur-gold);
+      text-decoration: none;
+    }
+
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 640px) {
+      .header-content { flex-direction: column; gap: 1rem; }
+      .logo { width: 80px; height: 80px; }
+      .buttons { flex-direction: column; gap: 1rem; }
+      button { width: 100%; max-width: 380px; margin: 0 auto; }
+      .leaf { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      h1 { font-size: 2.8rem; }
+      input { font-size: 1.15rem; padding: 0.9rem; }
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <h1>AyurSanjeevani Certificate Generator</h1>
-    <p style="color:#555; margin-bottom:30px;">
-      Enter your full name to generate your Certificate of Appreciation
-    </p>
+    <!-- Floating leaves -->
+    <div class="leaf"></div><div class="leaf"></div><div class="leaf"></div><div class="leaf"></div><div class="leaf"></div>
 
-    <input type="text" id="name" placeholder="Enter your full name here" />
+    <header>
+      <div class="header-content">
+        <img 
+          src="logo.png" 
+          alt="Excellence Ayurveda Logo" 
+          class="logo"
+        />
+        <div>
+          <h1>Excellence Ayurveda</h1>
+          <p class="subtitle">Ancient Wisdom • Modern Learning</p>
+        </div>
+      </div>
+    </header>
 
-    <div class="buttons">
-      <button id="generateBtn" onclick="generateCertificate()">Generate Certificate</button>
-      <br>
-      <button id="downloadPdf" onclick="downloadPdf()" disabled>
-        Download PDF (Recommended – Best for Print)
-      </button>
-      <button id="downloadJpg" onclick="downloadImage('jpg')" disabled>
-        Download JPG (Quick Share)
-      </button>
+    <div class="content">
+      <label for="name">Your Full Name</label>
+      <input type="text" id="name" placeholder="e.g. Priya Sharma" autocomplete="off" />
+
+      <div class="buttons">
+        <button id="generateBtn" onclick="generateCertificate()">Generate Certificate</button>
+        <button id="downloadPdf" onclick="downloadPdf()" disabled>Download PDF (Recommended)</button>
+        <button id="downloadJpg" onclick="downloadImage('jpg')" disabled>Download JPG</button>
+      </div>
+
+      <canvas id="canvas" width="1400" height="1050"></canvas>
+
+      <p id="status">Ready when you are… 🌿</p>
     </div>
-
-    <canvas id="canvas" width="1400" height="1050"></canvas>
-
-    <p class="hint" id="status" style="min-height:1.4em;"></p>
   </div>
 
+  <footer>
+    © <span id="year"></span> Excellence Ayurveda – Online Academy<br>
+    All rights reserved • <a href="#">Contact</a>
+  </footer>
+
   <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
-    
+
     const generateBtn = document.getElementById('generateBtn');
     const pdfBtn = document.getElementById('downloadPdf');
     const jpgBtn = document.getElementById('downloadJpg');
-    const status = document.getElementById('status');
+    const statusEl = document.getElementById('status');
 
-    // Load background template
     const bgImage = new Image();
-    bgImage.src = "template.png";  // ← your local file (must run via http://localhost)
+    bgImage.src = "template.png";
 
     bgImage.onload = () => {
       ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
-      status.textContent = "Template loaded. Ready to generate.";
     };
 
     bgImage.onerror = () => {
-      status.textContent = "Error loading template.png – make sure you're using a local server (not file://)";
-      status.style.color = "red";
+      statusEl.textContent = "Could not load template.png";
+      statusEl.className = "error";
+      statusEl.classList.add('show');
     };
 
     function generateCertificate() {
       const name = document.getElementById('name').value.trim();
       if (!name) {
-        status.textContent = "Please enter your name";
-        status.style.color = "#d9534f";
+        statusEl.textContent = "Please enter your name";
+        statusEl.className = "error";
+        statusEl.classList.add('show');
         return;
       }
 
-      // Redraw background
-      ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+      generateBtn.classList.add('loading');
+      generateBtn.disabled = true;
+      generateBtn.textContent = '';
 
-      // Draw name
-      ctx.font = 'normal 92px "Allura"';
-      ctx.fillStyle = '#1a0d4a';           // ← change to match your template color
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
+      setTimeout(() => {
+        generateBtn.classList.remove('loading');
+        generateBtn.disabled = false;
+        generateBtn.textContent = 'Generate Again';
 
-      const x = canvas.width / 2;
-      const y = 480;                       // ← adjust this number to move name lower/higher
+        ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
 
-      ctx.fillText(name, x, y);
+        ctx.font = 'normal 92px "Allura"';
+        ctx.fillStyle = '#1a0d4a';           // ← change color if needed
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
 
-      // Enable download buttons
-      pdfBtn.disabled = false;
-      jpgBtn.disabled = false;
+        ctx.fillText(name, canvas.width/2, 480); // ← adjust this y-value to move name
 
-      status.textContent = `Certificate ready for ${name}! Choose PDF for printing or JPG for sharing.`;
-      status.style.color = "#28a745";
+        canvas.classList.add('generated');
+
+        setTimeout(() => pdfBtn.disabled = false, 300);
+        setTimeout(() => jpgBtn.disabled = false, 500);
+
+        statusEl.textContent = `Ready for ${name} 🌿`;
+        statusEl.className = "success";
+        statusEl.classList.add('show');
+      }, 900);
     }
 
     function downloadImage(format = 'jpg') {
       const name = document.getElementById('name').value.trim() || 'Participant';
-      const mime = format === 'jpg' ? 'image/jpeg' : 'image/png';
-      const quality = format === 'jpg' ? 0.92 : 1.0;
-
       const link = document.createElement('a');
-      link.download = `Certificate_AyurSanjeevani_${name.replace(/\s+/g,'_')}.${format}`;
-      link.href = canvas.toDataURL(mime, quality);
+      link.download = `Excellence_Ayurveda_${name.replace(/\s+/g,'_')}.${format}`;
+      link.href = canvas.toDataURL(format === 'jpg' ? 'image/jpeg' : 'image/png', format === 'jpg' ? 0.92 : 1);
       link.click();
     }
 
     async function downloadPdf() {
-      if (!window.jspdf) {
-        alert("PDF library failed to load. Check your internet connection.");
-        return;
-      }
+      if (!window.jspdf) return alert("PDF library not loaded");
+
+      pdfBtn.classList.add('loading');
+      pdfBtn.disabled = true;
+      pdfBtn.textContent = '';
 
       const { jsPDF } = window.jspdf;
       const name = document.getElementById('name').value.trim() || 'Participant';
 
-      const pdf = new jsPDF({
-        orientation: 'landscape',
-        unit: 'px',
-        format: [canvas.width, canvas.height]
-      });
+      setTimeout(() => {
+        const pdf = new jsPDF({ orientation: 'landscape', unit: 'px', format: [canvas.width, canvas.height] });
+        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, canvas.width, canvas.height);
+        pdf.save(`Excellence_Ayurveda_${name.replace(/\s+/g,'_')}.pdf`);
 
-      const imgData = canvas.toDataURL('image/png');
-
-      pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-      pdf.save(`Certificate_AyurSanjeevani_${name.replace(/\s+/g,'_')}.pdf`);
+        pdfBtn.classList.remove('loading');
+        pdfBtn.disabled = false;
+        pdfBtn.textContent = 'Download PDF (Recommended)';
+      }, 400);
     }
   </script>
 </body>
