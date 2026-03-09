@@ -1,514 +1,907 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Excellence Ayurveda – Certificate Generator</title>
-  <link rel="icon" href="./logo.ico" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Allura&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Excellence Ayurveda – Certificate Generator</title>
 
-  <style>
-    :root {
-      --ayur-green:     #2e5d3a;
-      --ayur-green-dark:#1a3c26;
-      --ayur-gold:      #c9a96e;
-      --ayur-cream:     #fdfaf3;
-      --text-dark:      #2d2d2d;
-      --border-light:   #e0e0d8;
-      --shadow-soft:    0 6px 20px rgba(0,0,0,0.12);
-      --shadow-lift:    0 16px 45px rgba(46,93,58,0.28);
-    }
+<link rel="icon" href="logo.ico">
 
-    * { box-sizing: border-box; margin:0; padding:0; }
+<link href="https://fonts.googleapis.com/css2?family=Allura&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-    body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background: linear-gradient(-45deg, var(--ayur-cream), #f0ede5, #e8e2d3, var(--ayur-cream));
-      background-size: 400% 400%;
-      animation: gentleBreathe 16s ease-in-out infinite alternate;
-      color: var(--text-dark);
-      min-height: 100vh;
-      padding: 1.2rem 0.8rem;
-    }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-    @keyframes gentleBreathe {
-      0%   { background-position: 0% 50%; }
-      100% { background-position: 100% 50%; }
-    }
+<style>
 
-    .container {
-      max-width: 1080px;
-      margin: 0 auto;
-      background: rgba(255,255,255,0.97);
-      backdrop-filter: blur(12px);
-      border-radius: 20px;
-      box-shadow: 0 12px 50px rgba(0,0,0,0.09);
-      overflow: hidden;
-    }
+:root{
+--green:#2e5d3a;
+--dark:#1a3c26;
+--gold:#c9a96e;
+--cream:#fdfaf3;
+--border:#e0e0d8;
+}
 
-    header {
-      background: linear-gradient(135deg, var(--ayur-green) 0%, var(--ayur-green-dark) 100%);
-      color: white;
-      padding: 3.8rem 1.6rem 2.6rem;
-      text-align: center;
-      position: relative;
-    }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
 
-    .header-content {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1.4rem;
-      flex-wrap: wrap;
-    }
+body{
+font-family:'Inter',sans-serif;
+background:linear-gradient(-45deg,#fdfaf3,#f0ede5,#e8e2d3,#fdfaf3);
+background-size:400% 400%;
+animation:bgmove 16s ease infinite;
+padding:20px;
+}
 
-    .logo {
-      width: 80px;
-      height: 80px;
-      object-fit: contain;
-      border-radius: 50%;
-      border: 2.5px solid var(--ayur-gold);
-      animation: gentleRotate 28s linear infinite;
-    }
+@keyframes bgmove{
+0%{background-position:0% 50%;}
+100%{background-position:100% 50%;}
+}
 
-    @keyframes gentleRotate {
-      to { transform: rotate(360deg); }
-    }
+.container{
+max-width:1000px;
+margin:auto;
+background:white;
+border-radius:18px;
+overflow:hidden;
+box-shadow:0 10px 40px rgba(0,0,0,0.1);
+}
 
-    h1 {
-      font-family: 'Allura', cursive;
-      font-size: clamp(2.9rem, 10vw, 5rem);
-      color: var(--ayur-gold);
-      text-shadow: 0 3px 12px rgba(0,0,0,0.4);
-      margin: 0;
-    }
+header{
+background:linear-gradient(135deg,var(--green),var(--dark));
+color:white;
+padding:40px;
+text-align:center;
+}
 
-    .subtitle {
-      font-size: clamp(1.1rem, 3.8vw, 1.45rem);
-      opacity: 0.93;
-      margin-top: 0.5rem;
-    }
+h1{
+font-family:'Allura',cursive;
+font-size:56px;
+color:var(--gold);
+}
 
-    /* ──────────────────────────────────────────────
-       Advanced 3D Calendar Flip Countdown
-    ────────────────────────────────────────────── */
-    .countdown-wrapper {
-      padding: 1.8rem 1.2rem;
-      margin: 0 1.2rem 1.8rem;
-      background: linear-gradient(145deg, rgba(46,93,58,0.07), rgba(201,169,110,0.04));
-      border-radius: 18px;
-      box-shadow: 0 5px 22px rgba(0,0,0,0.07);
-    }
+.content{
+padding:40px;
+text-align:center;
+}
 
-    .countdown-title {
-      font-size: 1.3rem;
-      color: var(--ayur-green-dark);
-      font-weight: 500;
-      margin-bottom: 1.3rem;
-    }
+.timer-box{
+background:linear-gradient(135deg,var(--green),var(--dark));
+padding:20px;
+border-radius:12px;
+color:white;
+margin-bottom:30px;
+}
 
-    .countdown {
-      display: flex;
-      justify-content: center;
-      gap: 1.1rem;
-      flex-wrap: wrap;
-    }
+.timer-title{
+font-weight:600;
+margin-bottom:6px;
+}
 
-    .flip-card {
-      perspective: 1000px;
-      width: 90px;
-      height: 110px;
-      position: relative;
-    }
+.timer{
+font-size:26px;
+font-weight:700;
+color:#ffd67a;
+}
 
-    .flip-card-inner {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      transition: transform 0.9s cubic-bezier(0.23,1,0.32,1);
-      transform-style: preserve-3d;
-    }
+input{
+padding:14px;
+font-size:18px;
+width:100%;
+max-width:420px;
+border-radius:10px;
+border:2px solid var(--border);
+text-align:center;
+margin-top:10px;
+}
 
-    .flip-card.flipping .flip-card-inner {
-      transform: rotateX(-180deg);
-    }
+.buttons{
+margin-top:20px;
+display:flex;
+justify-content:center;
+gap:10px;
+flex-wrap:wrap;
+}
 
-    .flip-card-front,
-    .flip-card-back {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      backface-visibility: hidden;
-      background: white;
-      border-radius: 14px;
-      box-shadow: var(--shadow-soft);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-    }
+button{
+padding:12px 20px;
+font-weight:600;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
 
-    .flip-card-front {
-      background: linear-gradient(180deg, #fff 0%, #fcfaf5 100%);
-    }
+#generateBtn{background:var(--green);color:white;}
+#downloadPdf{background:var(--gold);color:white;}
+#downloadJpg{background:#555;color:white;}
 
-    .flip-card-back {
-      background: linear-gradient(180deg, #fff 0%, #fcfaf5 100%);
-      transform: rotateX(180deg);
-    }
+button:disabled{
+opacity:0.4;
+cursor:not-allowed;
+}
 
-    .flip-card-value {
-      font-size: 2.6rem;
-      font-weight: 700;
-      color: var(--ayur-green);
-      line-height: 1;
-    }
+canvas{
+margin-top:30px;
+border:1px solid #ddd;
+border-radius:6px;
+max-width:100%;
+}
 
-    .flip-card-label {
-      font-size: 0.95rem;
-      color: #555;
-      margin-top: 0.5rem;
-      font-weight: 400;
-    }
+footer{
+background:var(--dark);
+color:white;
+text-align:center;
+padding:15px;
+margin-top:20px;
+}
 
-    /* Paper curl / shadow during flip */
-    .flip-card.flipping .flip-card-front {
-      box-shadow: inset 0 0 40px rgba(0,0,0,0.08), 0 20px 50px rgba(46,93,58,0.3);
-    }
+.popup{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.4);
+display:flex;
+align-items:center;
+justify-content:center;
+visibility:hidden;
+opacity:0;
+transition:0.25s;
+}
 
-    .flip-card.flipping .flip-card-back {
-      box-shadow: inset 0 0 40px rgba(0,0,0,0.08), 0 20px 50px rgba(46,93,58,0.3);
-    }
+.popup.active{
+visibility:visible;
+opacity:1;
+}
 
-    .countdown-complete {
-      font-size: 1.45rem;
-      color: var(--ayur-gold);
-      padding: 1.4rem;
-      background: rgba(201,169,110,0.13);
-      border-radius: 14px;
-      animation: gentlePulse 2.8s infinite ease-in-out;
-    }
+.popup-box{
+background:white;
+padding:25px;
+border-radius:12px;
+text-align:center;
+max-width:350px;
+box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
 
-    @keyframes gentlePulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50%      { transform: scale(1.03); opacity: 0.92; }
-    }
+.popup-box h3{
+color:#c0392b;
+margin-bottom:10px;
+}
 
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .flip-card { width: 80px; height: 100px; }
-      .flip-card-value { font-size: 2.2rem; }
-      .countdown { gap: 0.8rem; }
-    }
+.popup-box button{
+margin-top:10px;
+background:var(--green);
+color:white;
+}
 
-    @media (max-width: 540px) {
-      .flip-card { width: 70px; height: 90px; }
-      .flip-card-value { font-size: 1.9rem; }
-      .flip-card-label { font-size: 0.82rem; }
-      .countdown-wrapper { padding: 1.3rem 0.8rem; margin: 0 0.8rem 1.4rem; }
-    }
-
-    @media (max-width: 400px) {
-      .flip-card { width: 62px; height: 82px; }
-      .flip-card-value { font-size: 1.65rem; }
-      .countdown { gap: 0.6rem; }
-    }
-
-    /* ──────────────────────────────────────────────
-       Certificate content area
-    ────────────────────────────────────────────── */
-    .content {
-      padding: 2rem 1.4rem;
-      text-align: center;
-    }
-
-    label {
-      font-size: 1.25rem;
-      font-weight: 500;
-      margin-bottom: 0.8rem;
-      color: var(--ayur-green-dark);
-      display: block;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      max-width: 520px;
-      padding: 1.1rem 1.5rem;
-      font-size: 1.35rem;
-      border: 2px solid var(--border-light);
-      border-radius: 14px;
-      text-align: center;
-      transition: all 0.3s;
-    }
-
-    input:focus {
-      border-color: var(--ayur-green);
-      box-shadow: 0 0 0 5px rgba(46,93,58,0.18);
-    }
-
-    .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1.2rem 1.8rem;
-      margin: 2.2rem 0;
-    }
-
-    button {
-      padding: 1rem 2.4rem;
-      font-size: 1.15rem;
-      font-weight: 600;
-      border: none;
-      border-radius: 14px;
-      cursor: pointer;
-      min-width: 200px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    canvas {
-      max-width: 100%;
-      height: auto;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      margin: 2rem auto;
-      display: block;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-
-    footer {
-      background: var(--ayur-green-dark);
-      color: rgba(255,255,255,0.9);
-      text-align: center;
-      padding: 1.5rem;
-      font-size: 0.94rem;
-    }
-  </style>
+</style>
 </head>
+
 <body>
 
-  <div class="container">
+<div class="container">
 
-    <header>
-      <div class="header-content">
-        <img src="logo.png" alt="Excellence Ayurveda Logo" class="logo"/>
-        <div>
-          <h1>Excellence Ayurveda</h1>
-          <p class="subtitle">Ancient Wisdom • Modern Learning</p>
-        </div>
-      </div>
-    </header>
+<header>
+<h1>Excellence Ayurveda</h1>
+<p>Ancient Wisdom • Modern Learning</p>
+</header>
 
-    <div class="countdown-wrapper">
-      <div class="countdown-title">Certificate Window Closes In</div>
-      <div class="countdown" id="countdown">
-        <div class="flip-card"><div class="flip-card-inner">
-          <div class="flip-card-front">
-            <div class="flip-card-value" id="days-front">00</div>
-            <div class="flip-card-label">Days</div>
-          </div>
-          <div class="flip-card-back">
-            <div class="flip-card-value" id="days-back">00</div>
-            <div class="flip-card-label">Days</div>
-          </div>
-        </div></div>
+<div class="content">
 
-        <div class="flip-card"><div class="flip-card-inner">
-          <div class="flip-card-front">
-            <div class="flip-card-value" id="hours-front">00</div>
-            <div class="flip-card-label">Hours</div>
-          </div>
-          <div class="flip-card-back">
-            <div class="flip-card-value" id="hours-back">00</div>
-            <div class="flip-card-label">Hours</div>
-          </div>
-        </div></div>
+<div class="timer-box">
+<div class="timer-title">⏳ Hurry Up — Last Chance to Download Your Certificate</div>
+<div id="countdown" class="timer"></div>
+</div>
 
-        <div class="flip-card"><div class="flip-card-inner">
-          <div class="flip-card-front">
-            <div class="flip-card-value" id="minutes-front">00</div>
-            <div class="flip-card-label">Minutes</div>
-          </div>
-          <div class="flip-card-back">
-            <div class="flip-card-value" id="minutes-back">00</div>
-            <div class="flip-card-label">Minutes</div>
-          </div>
-        </div></div>
+<label>Verify Your Enrollment</label><br>
 
-        <div class="flip-card"><div class="flip-card-inner">
-          <div class="flip-card-front">
-            <div class="flip-card-value" id="seconds-front">00</div>
-            <div class="flip-card-label">Seconds</div>
-          </div>
-          <div class="flip-card-back">
-            <div class="flip-card-value" id="seconds-back">00</div>
-            <div class="flip-card-label">Seconds</div>
-          </div>
-        </div></div>
-      </div>
+<input id="nameInput" placeholder="Enter Full Name">
 
-      <div class="countdown-complete" id="completeMsg" style="display:none;">
-        The moment has arrived – thank you for being with Excellence Ayurveda 🌿
-      </div>
-    </div>
+<div class="buttons">
+<button id="generateBtn">Generate Certificate</button>
+<button id="downloadPdf" disabled>PDF</button>
+<button id="downloadJpg" disabled>JPG</button>
+</div>
 
-    <div class="content">
-      <label for="name">Enter Your Full Name</label>
-      <input type="text" id="name" placeholder="e.g. Aryan Bhat" autocomplete="off" />
+<canvas id="canvas" width="1400" height="1050"></canvas>
 
-      <div class="buttons">
-        <button id="generateBtn" onclick="generateCertificate()">Generate Certificate</button>
-        <button id="downloadPdf" onclick="downloadPdf()" disabled>Download PDF (Recommended)</button>
-        <button id="downloadJpg" onclick="downloadImage('jpg')" disabled>Download JPG</button>
-      </div>
+<p id="status">Ready for verification 🌿</p>
 
-      <canvas id="canvas" width="1400" height="1050"></canvas>
+</div>
+</div>
 
-      <p id="status">Ready when you are… 🌿</p>
-    </div>
+<footer>
+© <span id="year"></span> Excellence Ayurveda Academy
+</footer>
 
-  </div>
+<div id="popup" class="popup">
+<div class="popup-box">
+<h3 id="popupTitle"></h3>
+<p id="popupMessage"></p>
+<button onclick="closePopup()">OK</button>
+</div>
+</div>
 
-  <footer>
-    © <span id="year"></span> Excellence Ayurveda – Online Academy<br>
-    All rights reserved • <a href="tel:+919026366890">Contact</a>
-  </footer>
+<script>
 
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
+document.getElementById("year").textContent=new Date().getFullYear()
 
-    // ──────────────────────────────────────────────
-    // 3D Flip Countdown
-    // ──────────────────────────────────────────────
-    const targetDate = new Date('2026-03-11T00:00:00+05:30').getTime();
+const studentList=[
+  "DIVYA YADAV",
+  "NIKHIL NITIN HADALE",
+  "Shravani Tukaram Gaikwad ",
+  "Dr Kusum Sharma ",
+  "Aditya Bandgar ",
+  "SHRUTI SANJAY SALVI ",
+  "KOMAL MEENA ",
+  "Kanchan Verma ",
+  "Anjali jain",
+  "Aakanksha Acharya ",
+  "MALKEET SINGH",
+  "ABHIJIT BISWAS",
+  "Eesha Dhamapurkar ",
+  "Shritej Ubhad ",
+  "DR PRIYA MUDHGIL ",
+  "Rashmi Manker ",
+  "DR. PUNAMCHAND BURDE",
+  "Kajal vinayak Kumbhar ",
+  "ARATI NAMDEV MAGAR",
+  "Arti",
+  "Arti kestwal ",
+  "Dr Vikash Singhal",
+  "DR.ANUJA VIJAY BHENDEKAR",
+  "Manshi",
+  "DHRUMIL BHATIA",
+  "Noopur yadav ",
+  "Himnesh bansal",
+  "HIMANSHU",
+  "KALYANI VAYASRAO HUMANE",
+  "DR ASHISH KUMAR MISHRA ",
+  "ARJAV GANGWAR ",
+  "ADITI SINGH",
+  "Dr. Harshit Choudhary ",
+  "ROHAN VERMA",
+  "Vd.POOJA GARG",
+  "Ramji ",
+  "Anjali pal",
+  "Angel Chaudhary ",
+  "YASH KUMAR",
+  "VARUN JAIN",
+  "Sandhya yadav",
+  "PRAMOD SHARMA ",
+  "NEHA YADAV ",
+  "OZA DEVANG RAMESHBHAI",
+  "Dr Ajeet Kumar Yadav ",
+  "BIPIN KUMAR",
+  "Dr. REWATI RAMAN SAHU",
+  "DR. MOHAMMAD ARMAN ",
+  "Dr. YOGESH KUMAR SHARMA ",
+  "Dr.Rahul Kumar Yadav ",
+  "AAYUSHI AGARWAL",
+  "JASWANT SINGH",
+  "MRUTYUNJAYA MEHER ",
+  "Dr Vikram kumar kuldeep ",
+  "SMITA BHAIJI",
+  "BHAWANA SHARMA",
+  "ANUPAM",
+  "DR. NISHA CHAUDHARY ",
+  "VIJAY PRAKASH",
+  "RAJESH SINGH ",
+  "Chandra Madhu Bharti ",
+  "Rutuja Santosh gavali ",
+  "AMRUT VASANT BANSODE ",
+  "HIMANSHU KUMAR ",
+  "Akanksha Sharma ",
+  "ASHMIT",
+  "RAMAN ",
+  "AYUSHI AGRAWAL",
+  "Abhishek yadav",
+  "JAIN DIPTI DEVILAL ",
+  "Anushka patel",
+  "Mohini yadav ",
+  "PRADNYA SANTOSH VEER",
+  "atul rahangdale",
+  "Nirmala mehta",
+  "KHUSHBOO Rajendra kumar Mishra",
+  "DR. AKASH SRIVASTAVA ",
+  "Dr.ARADHANA RATHOD ",
+  "Km . Mamta ",
+  "Sanika satish surve",
+  "PRATIMA BHOORIAN",
+  "RAHUL KUMAR VERMA",
+  "Seema bunkar ",
+  "Dr Anjali Rawat",
+  "AKHILESH PANDEY",
+  "Dr chanchal sharma ",
+  "DR. DIKSHA VERMA ",
+  "RAHUL PASRICHA ",
+  "VD.SHRUTI DESHLAHRA",
+  "Dr. Tanya Bhawnani ",
+  "DR. ADITYA ANANTRAO KULKARNI",
+  "SATVIKA MISHRA ",
+  "SRIMOYEE BHATTACHARYA ",
+  "DR. PRINKA",
+  "ANIKET YADAV ",
+  "Dr. Madhu Dixit",
+  "SAURABH KUMAR ",
+  "Dr munish bali ",
+  "DR.SWARAJ SUDHAKAR GIRE",
+  "Pooja .D.Idhole",
+  "SANJAY KUMAR GUPTA",
+  "AKSHAT SHARMA",
+  "DR ASHUTOSH VISHWAKARMA",
+  "Vd.Shrikant Shinde",
+  "Vaidya  Tushar Biswas",
+  "Vd Rahul jain",
+  "DR. JAY DIWAKAR",
+  "Devyani Rathore ",
+  "RABARI PRAPTI ",
+  "Dr. Damini Sahu",
+  "NARENDRA KAPOORIA ",
+  "Kanahaiya kumar Rai ",
+  "VALISH ",
+  "SAMPADA ALKESH JAJOO ",
+  "VD. PRARIT GOYAL",
+  "PAYAL MANJULNATH BHAVARE ",
+  "PRATIK SURESH SOLANKE",
+  "Dr. Akriti Jain",
+  "POOJA KHOSE",
+  "Dr. Riddhi Ghumaliya ",
+  "ANSHU RAI",
+  "Lalitha ",
+  "Lokesh kumar ",
+  "MAHIMA PRASAD BEHERA ",
+  "SUDHANSHU SAGAR SHAMBHARKAR ",
+  "VD LALITKUMAR SHARADRAO PATIL ",
+  "Harshal Karansing Tadvi ",
+  "Vd shweta Kalmundale ",
+  "ARADHANA SRIVASTAVA ",
+  "SALONI MANOJKUMAR SONAR",
+  "RAAJ SINGH",
+  "Rupali Manik Khiste",
+  "Dr.Herekar Haripriya ",
+  "Jeetendra Kumar",
+  "ROHAN TANAJI MALI",
+  "ATHARV SANDIP MOHARIR ",
+  "MIMANSA MISHRA ",
+  "Anjali Parmar ",
+  "ARPIT KUMAR DOHARE ",
+  "Sangeeta Sahoo",
+  "Dr.Aditya Shekhar Purnendu",
+  "UMANG AGRAWAL",
+  "DR SHWETA MOURYA",
+  "AFRANA KHATOON",
+  "SHUBHAM DNYANESHWAR SUL",
+  "Dr Aditya gupta",
+  "Ashwini Naik",
+  "Vedant kataria ",
+  "Rahul",
+  "SAURABH KUMAR",
+  "DR ANIL SHARMA ",
+  "Patel Khushi Sanjaybhai",
+  "Dr AAYUSHI SAGAR ",
+  "BRIJESH KUMAR CHAURASIA",
+  "Dr. RISHABH GAUTAM",
+  "NALAJALA PRADEEP",
+  "ANANDA N S",
+  "DR ARPITA GUPTA ",
+  "SUHAIL KAIF",
+  "PRAVEEN KUMAR ",
+  "KRISHAN GOPAL GUPTA",
+  "Sachin",
+  "Aakriti Jain ",
+  "Dr Kaushal Patil",
+  "M Basavaraja ",
+  "PRANAVI ANTHWAL ",
+  "Dr. Vishal Saini",
+  "LEENA JAIN ",
+  "DR SATISH SURYAWANSHI ",
+  "PRANAV PRAKASH JADHAV ",
+  "RAJA SHANTANU ",
+  "DR. SHUBHAM SHAHAJI BORSE",
+  "Dr Savita Nehra ",
+  "Akshay parashar ",
+  "ASHA GAUTAM ",
+  "DR ANITA KUMARI ",
+  "Pankaj kumar maddheshiya",
+  "AYUSHI CHOUDHARY",
+  "Dr. Shaifali Sharma ",
+  "Dr. RAJESH CHANDNA",
+  "Shubhanshi Samariya",
+  "SHRUTIKA MAHADEO TURUPKAR",
+  "Vd. YATRI KANUBHAI THAKKER ",
+  "PRAJAPATI DRASHTIBEN ",
+  "Dr. JAGRATISHRIVASTAVA ",
+  "HIMANSHU KHATTAR ",
+  "Komal yadav",
+  "AYUSHI JAIN ",
+  "Dr.gulshan",
+  "BHUMI CHANDRAYAN",
+  "Dr.Sangita Jadav",
+  "Dr.Sagar K Chilad",
+  "DR. RAVI",
+  "DR SAVITA JANGDE",
+  "CHITYALA SAIKUMAR ",
+  "NISHA INDORIA ",
+  "RIYA SHARMA ",
+  "NEHA KUMARI",
+  "RAVI DALAL",
+  "DR. DIPSHIKHA SITARAM RAKHUNDE ",
+  "Dr Bhagiya Gayatri Gangaram ",
+  "KUMUDINI PATEL",
+  "Dr Deepshikha Sharma ",
+  "Riya Hemant Thacker",
+  "Tarandeep garg",
+  "Dr. Lahamge Gayatri Satish ",
+  "Dr FAIYAZUL HAQUE ",
+  "RIYA UDDHAV PATIL",
+  "AYUSH VATS",
+  "Dr Udho Jee sharma ",
+  "POOJA SOLANKI ",
+  "Kavita Kumari Devi ",
+  "DR. YOGESH KUMAR NETAM",
+  "SABA NOOR",
+  "Shivam Rajkumar verma ",
+  "DR CHIRAG",
+  "PRIYANKA VITTHALSING RAJPUT",
+  "Minaxi",
+  "Dr Rohini Govindrao Indure ",
+  "ARADHANA GUPTA ",
+  "APARAJITA SHRIMANDHAR WANJULE ",
+  "DR.T.ABINAYA",
+  "Shubham Saini ",
+  "DR UNNATI CHAUDHARI",
+  "sonali mourya ",
+  "SHALINI KASAUDHAN ",
+  "SAMEEKSHA DOHARE ",
+  "Dr.Pranjali",
+  "NANDINI AGRAWAL ",
+  "Sandeep panwar",
+  "Dr.DILEEPCHOUDHARY U",
+  "Pooja Siloriya ",
+  "Dr. Jaspreet Bain ",
+  "DR MUSHTAQUE ANSARI",
+  "SOURABH KUSHWAHA ",
+  "JANVI VANKAR ",
+  "PRASAD GAUTAM GAWAI ",
+  "Anurag saraswat",
+  "KUSHAGRA MISHRA ",
+  "Geeta",
+  "ANIL ULHAS JADHAV",
+  "AMRUTA PRABHAKAR PATIL",
+  "Shrashti Varshney",
+  "PRERNA SHAaH",
+  "Aqleema Azeem",
+  "HAZIRA KHATOON ",
+  "UDIT GOYAL",
+  "VD SAGAR DILIP BORSE ",
+  "SUSHMA Gupta ",
+  "VIKAS MEHTA ",
+  "DR VIJAY KUMAR ",
+  "KAMLESH PARMAR ",
+  "SHIVANI KAPURKAR ",
+  "DR. SHUBHAM ",
+  "SOUJANYA S G",
+  "DR. RAJSHREE SINGH ",
+  "DAMAM VINITHA ",
+  "HEMANT",
+  "VRUSHABH BACHHAV",
+  "Dr.M.CHANDANASREE",
+  "DR. PRINCY PATEL",
+  "Dinesh kumar sahu",
+  "Ranjana patel",
+  "Dr Rahul ",
+  "Vd. Vijeyata Verma",
+  "Dr NIKITA RATHEE",
+  "RINA JADHAV",
+  "GAJENDRA KIRAR",
+  "Dr.Ankit kumar sharma ",
+  "POONAM NARWARIYA",
+  "Sakshi bobade",
+  "DR ARUNA KUMARI SANGWAN ",
+  "DR PAPPU KUMAR SINGH ",
+  "Subham Sharma ",
+  "VAISHNAVI BHUSHAN LOKHANDE ",
+  "DR. POORTI PARMAR",
+  "DR. BILAL AHMAD",
+  "Harshita",
+  "Dr.Rani",
+  "GOURAV GUPTA",
+  "Ramesh Kumar ",
+  "Nikhil kumar",
+  "SHILPA KOHLI",
+  "HIMALI DINESHBHAI CHAVDA ",
+  "SRASHTI CHAUDHARY ",
+  "Dr.Zalak M Patel ",
+  "Dr. Diksha Choudhary ",
+  "Dr. Anamika saini",
+  "Dr. Mansi Anandani ",
+  "Dr Meet Digantkumar Kapadiya ",
+  "PATEL THIRALI HASMUKHLAL ",
+  "RANI TARUA ",
+  "Dr.Yash modi",
+  "Ruchika Bhargava ",
+  "DR. MOHAMMAD SHAMSUL HUDA ",
+  "Dr Harleen Kaur ",
+  "Dr Nooruddin",
+  "Dr Dibesh kumar jha",
+  "KANCHAN MISHRA",
+  "Mohd Tahir",
+  "Dr Mohammad Tariq ansari ",
+  "HEMAVATHI M",
+  "DRASHTI JAIN ",
+  "Sakshi purnima ",
+  "RIDHIMA JAIN",
+  "Safdar hussain ",
+  "SHWETA SINGH",
+  "PARIKH NISHI SARJUBHAI ",
+  "Dr SHOAIB AkHTAR",
+  "TEJSWI PATIL",
+  "Isha Yadav",
+  "PRIYA SUNIL TAWARE ",
+  "Dr Neha Patle",
+  "DIVYA RAJPUT ",
+  "RAVI SINGH",
+  "DEEPIKA SITAULA",
+  "Dr. Kumudini Dahariya ",
+  "VD. Deepika kunwar ",
+  "AMAN SANKHLA ",
+  "Dr. Arun Kushwaha",
+  "Soumya Tandon ",
+  "DR. VASUNDHARA SHAH",
+  "Jadav ajay bharatbhai",
+  "KAMLESH CHOUDHARY",
+  "VIPIN CHANDRA BISWAS ",
+  "Vd.Neeraj R Pathak",
+  "Jiya",
+  "CHAUDHARI SURESHBHAI BHURABHAI ",
+  "NITIKA SHARMA",
+  "Himanshu Pandey ",
+  "LAXMAN SINGH",
+  "Prabhat kumar",
+  "DR. PRAGATI SAHU",
+  "Dr Sourabh Kumar Singh ",
+  "DIVYA HIREMATH ",
+  "CHESHTA CHOUDHARY",
+  "ARMAAN GAUTAM ",
+  "Kanchan Sharma",
+  "PRIYAL BANSAL",
+  "AKASH PATEL",
+  "KAFEEL AHMAD",
+  "VAIDYA ASHWANI CHAURASIA ",
+  "Deepika ",
+  "Rubali Yede ",
+  "Priya Hiralal Koli",
+  "Dr Kuldeep Tamrakar ",
+  "HARSHITA DHARWA",
+  "DR. KIRTI",
+  "DR. SAKET DASS",
+  "HIMANI GIRHARE ",
+  "Lavkush patel",
+  "Dr. SEEMA. K. M",
+  "Dr.RAMKRISHNA KUSHWAH ",
+  "Rohit Arora ",
+  "NEERJA THAKUR",
+  "Deeksha",
+  "SAUMYA SINGH",
+  "Khushi Maurya ",
+  "Purab Gangaprasad Mulange ",
+  "RAVINDRA KUMAR",
+  "ATHARVA SANJAY BOBADE",
+  "Toshif khan ",
+  "Vd.Parikshit yadav",
+  "ABDUL RAHMAN",
+  "DR VINUTA ARKASALI ",
+  "DR.SHIDDANAGOUDA",
+  "ANSHIT JAIN",
+  "DR ANUPAMA V. YADAV",
+  "Dr. Harita Sachdev ",
+  "Dr. Shivraj singh",
+  "Posam Siva priyanka",
+  "Annewar Karthikeshwari ",
+  "HARENDER ",
+  "Mitaishi singh ",
+  "PRIYADARSHANI",
+  "Dr Sushma sharma",
+  "Aarti kashyap ",
+  "MRINAL BHARTI ",
+  "DR AKLESH VERMA ",
+  "Ayush patidar",
+  "Priya Gupta ",
+  "Sushmita Parit",
+  "Aayushi Jain ",
+  "SWATI SONWANE",
+  "ALISHA SIDDIQUI",
+  "Dr sn goswami ",
+  "DR. VIJAYKUMAR JASHVANTBHAI RATHOD",
+  "PANCHAL DANESH DINESHBHAI ",
+  "Devanshi shakya ",
+  "Rashmi",
+  "Shrinidhi ",
+  "Pavithra AN ",
+  "Divyanshu Jaiswal ",
+  "MEGHA PRALHAD LANJEWAR",
+  "Rishabh Raj",
+  "DR. MANIK CHAND JAISWAL",
+  "SHITAL BHUTE ",
+  "HEMAXI INDRODIYA ",
+  "SAKSHI BHAGWAN BHUMBAR ",
+  "Vaibhav Jaiswal ",
+  "Dr. Saurav Bansal ",
+  "Sudha Dansana ",
+  "Ajay Kumar ",
+  "DR AKSHIT KUMAR ",
+  "PRANALI SHRIRANG BHANUSE",
+  "Asmita Mungilwar",
+  "Dr Sagar Rana ",
+  "VAIDYA CHETNA RATHOR ",
+  "Dr SUGANDHA RAWAT",
+  "VD.VIKASH SAHU",
+  "DR SONAL DILGAR RAMTEKE",
+  "Dr. Pratibha devi",
+  "JITIN RAJ",
+  "Dr Shivam Kumar Gupta ",
+  "NIKHITA DHARWAD ",
+  "KALASH KASHYAP ",
+  "DR UZMA FIRASATH ",
+  "Shobhana khandal",
+  "DAKSHITA TANEJA",
+  "DHARMENDRA JAKHAR ",
+  "DR. RAKSHA GANESH KANOJE ",
+  "PIYUSH RANJAN",
+  "MUSKAN LALCHAND MOHNANI ",
+  "DR VIJAY LAXMI ",
+  "HUMAIRA JALAL ",
+  "ADEEBA NAZNEEN AFZAL",
+  "Aakanksha",
+  "Dr Pragya Shrivastava ",
+  "KUNAL GAURAV ",
+  "DR NILAM HAMIRBHAI SOLANKI ",
+  "PRIYA BHARTI",
+  "Dr Rainy",
+  "GANESH DAN",
+  "YASHPAL chadha",
+  "Arpan Raval",
+  "PRANJAL MAHENDRA NIKAM",
+  "GAJANAN NANDKUMAR AYYA",
+  "DEVANSHI NITINBHAI SHIRVI ",
+  "MAMTA  JAIN",
+  "Rohith P K",
+  "Dr DEEPAK KAUSHIK",
+  "ANURAG PRAJAPATI ",
+  "Anuja salwatkar ",
+  "DR. SONIA MANDAL",
+  "Puneeth Raj R M",
+  "VD. POOJA KATEKAR",
+  "VIDUSHI PATEL ",
+  "DR.SUNDARSINGH KASTURSINGH DANGA",
+  "Dr. SREE R.NAIR",
+  "VIRAL DINESH PAREKH ",
+  "SHINDE SNEHA ",
+  "Dr Vichi Sharma",
+  "Dr. Khushboo Izardar",
+  "Dr Anjaly Kotiyan ",
+  "Pragyan Vijaykumar pal",
+  "AFREEN RASHID ",
+  "PRITAL CHAUDHARI ",
+  "Dr.HEMALATHA.G.S.",
+  "POOJA BABASAHEB BANSODE ",
+  "Sneha Vallabhbhai Kansagara ",
+  "Dr Sonali Suresh Rathod ",
+  "Vd Vaidehi Pathak ",
+  "Tejashwini.P Dundashi.",
+  "Apoorva",
+  "OM CHANDRAKANT NAVALE ",
+  "VAIBHAV ARJUN SONAWANE ",
+  "Dr. Pankaj Das Rohit ",
+  "SHAH AKASHKUMAR BABULAL",
+  "RAJAT KUMAR GARG",
+  "JANHAVI D KOSHATWAR ",
+  "Shivani janjal ",
+  "Pallavi",
+  "Karthikeyan ",
+  "Dr Komal Maurya",
+  "JEEVITHA R U",
+  "HARSH RANJAN ",
+  "Dr Yogesh Pramod Bobde",
+  "Dr Yogita Yadav ",
+  "AYUSH KUMAR ",
+  "Peyush Pragya Shree ",
+  "VISHAL KUMAR",
+  "Kavita Shewale ",
+  "Dr.Ishwari.K",
+  "Dr. Mandakini Dwivedi ",
+  "AMAN AGARWAL",
+  "AKRITI KUMARI ",
+  "Dr. Karishma Kishor Mahajan ",
+  "DR DEEPA RAJPUT ",
+  "SAKSHI DNYANESHWAR NAIKWADE ",
+  "Ashish Kumar Pandey ",
+  "Dr. Saloni",
+  "Kriti Mani",
+  "RIMPALKUMARI ",
+  "Dr. Akshya Keserwal ",
+  "Dr.BAJRANG SAINI",
+  "Dr.Yogita Shaktawat",
+  "ANAL RAMESH KAUSHIK ",
+  "DR. NISHA",
+  "Akshay Sharma",
+  "AVIRAL SINGH"
+]
 
-    const units = [
-      { front: 'days-front',    back: 'days-back',    card: document.querySelectorAll('.flip-card')[0] },
-      { front: 'hours-front',   back: 'hours-back',   card: document.querySelectorAll('.flip-card')[1] },
-      { front: 'minutes-front', back: 'minutes-back', card: document.querySelectorAll('.flip-card')[2] },
-      { front: 'seconds-front', back: 'seconds-back', card: document.querySelectorAll('.flip-card')[3] }
-    ];
+const canvas=document.getElementById("canvas")
+const ctx=canvas.getContext("2d")
 
-    function updateCountdown() {
-      const now = Date.now();
-      let distance = targetDate - now;
+const pdfBtn=document.getElementById("downloadPdf")
+const jpgBtn=document.getElementById("downloadJpg")
+const generateBtn=document.getElementById("generateBtn")
+const input=document.getElementById("nameInput")
+const status=document.getElementById("status")
 
-      if (distance <= 0) {
-        document.getElementById('countdown').style.display = 'none';
-        document.getElementById('completeMsg').style.display = 'block';
-        return;
-      }
+let verifiedStudent=null
 
-      const d = Math.floor(distance / 86400000);
-      const h = Math.floor((distance % 86400000) / 3600000);
-      const m = Math.floor((distance % 3600000) / 60000);
-      const s = Math.floor((distance % 60000) / 1000);
+const bg=new Image()
+bg.src="template.png"
 
-      const values = [d, h, m, s];
+bg.onload=()=>{
+ctx.drawImage(bg,0,0,canvas.width,canvas.height)
+}
 
-      units.forEach((unit, i) => {
-        const newVal = String(values[i]).padStart(2, '0');
-        const frontEl = document.getElementById(unit.front);
-        if (frontEl.textContent !== newVal) {
-          document.getElementById(unit.back).textContent = newVal;
-          unit.card.classList.add('flipping');
+function normalize(name){
+return name.toLowerCase().replace(/\s+/g," ").trim()
+}
 
-          setTimeout(() => {
-            frontEl.textContent = newVal;
-            unit.card.classList.remove('flipping');
-          }, 450);
-        }
-      });
-    }
+function generateCertificate(){
 
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
+const user=input.value.trim()
 
-    // ──────────────────────────────────────────────
-    // Certificate generation
-    // ──────────────────────────────────────────────
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
+const match=studentList.find(n=>normalize(n)===normalize(user))
 
-    const generateBtn = document.getElementById('generateBtn');
-    const pdfBtn = document.getElementById('downloadPdf');
-    const jpgBtn = document.getElementById('downloadJpg');
-    const statusEl = document.getElementById('status');
+if(!match){
 
-    const bgImage = new Image();
-    bgImage.src = "template.png";
+verifiedStudent=null
+resetCanvas()
 
-    bgImage.onload = () => {
-      ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
-    };
+showPopup(
+"User Not Found",
+"Make sure you are registered. Only registered students can generate certificates."
+"Make sure the spellings are correct & also include any prefix[if any] used at time of registration."
+)
 
-    function generateCertificate() {
-      const name = document.getElementById('name').value.trim();
-      if (!name) {
-        statusEl.textContent = "Please enter your name";
-        statusEl.style.color = "#c0392b";
-        return;
-      }
+status.textContent="User Not Found"
 
-      generateBtn.disabled = true;
-      generateBtn.textContent = "Generating...";
+return
+}
 
-      setTimeout(() => {
-        ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+verifiedStudent=match
+drawCertificate(match)
 
-        ctx.font = 'normal 92px "Allura"';
-        ctx.fillStyle = '#1a0d4a';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
+}
 
-        ctx.fillText(name, canvas.width/2, 480);
+function drawCertificate(name){
 
-        canvas.classList.add('generated');
+ctx.drawImage(bg,0,0,canvas.width,canvas.height)
 
-        pdfBtn.disabled = false;
-        jpgBtn.disabled = false;
+let size=92
 
-        generateBtn.disabled = false;
-        generateBtn.textContent = "Generate Again";
+ctx.fillStyle="#1a0d4a"
+ctx.textAlign="center"
+ctx.textBaseline="middle"
 
-        statusEl.textContent = `Certificate ready for ${name} 🌿`;
-        statusEl.style.color = "var(--ayur-green)";
-      }, 900);
-    }
+ctx.font=size+"px Allura"
 
-    function downloadImage(format = 'jpg') {
-      const name = document.getElementById('name').value.trim() || 'Participant';
-      const link = document.createElement('a');
-      link.download = `Excellence_Ayurveda_${name.replace(/\s+/g,'_')}.${format}`;
-      link.href = canvas.toDataURL(`image/${format === 'jpg' ? 'jpeg' : 'png'}`, format === 'jpg' ? 0.92 : 1);
-      link.click();
-    }
+while(ctx.measureText(name).width>1000){
+size-=2
+ctx.font=size+"px Allura"
+}
 
-    async function downloadPdf() {
-      if (!window.jspdf) return alert("PDF library not loaded");
+ctx.fillText(name,canvas.width/2,480)
 
-      pdfBtn.disabled = true;
-      pdfBtn.textContent = "Downloading...";
+pdfBtn.disabled=false
+jpgBtn.disabled=false
 
-      const { jsPDF } = window.jspdf;
-      const name = document.getElementById('name').value.trim() || 'Participant';
+status.textContent="Certificate ready for "+name
 
-      setTimeout(() => {
-        const pdf = new jsPDF({ orientation: 'landscape', unit: 'px', format: [canvas.width, canvas.height] });
-        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, canvas.width, canvas.height);
-        pdf.save(`Excellence_Ayurveda_${name.replace(/\s+/g,'_')}.pdf`);
+}
 
-        pdfBtn.disabled = false;
-        pdfBtn.textContent = "Download PDF (Recommended)";
-      }, 400);
-    }
-  </script>
+function resetCanvas(){
+ctx.drawImage(bg,0,0,canvas.width,canvas.height)
+pdfBtn.disabled=true
+jpgBtn.disabled=true
+}
+
+function downloadImage(){
+
+if(!verifiedStudent){
+showPopup("Verification Required","Verify enrollment first.")
+return
+}
+
+const link=document.createElement("a")
+link.download="Certificate_"+verifiedStudent+".jpg"
+link.href=canvas.toDataURL("image/jpeg",0.92)
+link.click()
+
+}
+
+async function downloadPdf(){
+
+if(!verifiedStudent){
+showPopup("Verification Required","Verify enrollment first.")
+return
+}
+
+const {jsPDF}=window.jspdf
+
+const pdf=new jsPDF({
+orientation:"landscape",
+unit:"px",
+format:[1400,1050]
+})
+
+pdf.addImage(canvas.toDataURL("image/png"),"PNG",0,0,1400,1050)
+pdf.save("Certificate_"+verifiedStudent+".pdf")
+
+}
+
+function showPopup(title,msg){
+
+document.getElementById("popupTitle").textContent=title
+document.getElementById("popupMessage").textContent=msg
+document.getElementById("popup").classList.add("active")
+
+}
+
+function closePopup(){
+document.getElementById("popup").classList.remove("active")
+}
+
+generateBtn.onclick=generateCertificate
+jpgBtn.onclick=downloadImage
+pdfBtn.onclick=downloadPdf
+
+input.addEventListener("keypress",e=>{
+if(e.key==="Enter")generateCertificate()
+})
+
+input.addEventListener("input",()=>{
+verifiedStudent=null
+pdfBtn.disabled=true
+jpgBtn.disabled=true
+})
+
+const deadline=new Date("2026-03-11T00:00:00").getTime()
+const countdown=document.getElementById("countdown")
+
+function updateTimer(){
+
+const now=new Date().getTime()
+const diff=deadline-now
+
+if(diff<=0){
+
+countdown.textContent="Certificate window closed"
+
+generateBtn.disabled=true
+pdfBtn.disabled=true
+jpgBtn.disabled=true
+
+return
+}
+
+const d=Math.floor(diff/(1000*60*60*24))
+const h=Math.floor((diff%(1000*60*60*24))/(1000*60*60))
+const m=Math.floor((diff%(1000*60*60))/(1000*60))
+const s=Math.floor((diff%(1000*60))/1000)
+
+countdown.textContent=`${d}d ${h}h ${m}m ${s}s`
+
+}
+
+setInterval(updateTimer,1000)
+updateTimer()
+
+</script>
+
 </body>
 </html>
